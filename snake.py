@@ -93,3 +93,9 @@ class Juego:
     def _fuera_de_limites(self, pos):
         x, y = pos
         return not (0 <= x < self.ancho and 0 <= y < self.alto)
+
+    def tick(self):
+        self.serpiente.mover()
+
+        if self._fuera_de_limites(self.serpiente.cabeza):
+            self.terminado = True

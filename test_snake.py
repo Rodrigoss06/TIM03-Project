@@ -73,3 +73,12 @@ def test_comida_dentro_del_tablero_y_fuera_de_la_serpiente():
     assert 0 <= x < juego.ancho
     assert 0 <= y < juego.alto
     assert juego.comida not in juego.serpiente.cuerpo
+
+
+# RF07 — Derrota: colisión con la pared
+def test_game_over_al_chocar_con_la_pared():
+    juego = Juego(ancho=3, alto=3, inicio=(2, 1), semilla=0)
+
+    juego.tick()
+
+    assert juego.terminado is True
