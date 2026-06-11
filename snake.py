@@ -46,10 +46,14 @@ class Serpiente:
     def longitud(self):
         return len(self.cuerpo)
 
-    def mover(self):
+    def mover(self, crecio=False):
         dx, dy = self.direccion.value
         x, y = self.cabeza
-        self.cuerpo = [(x + dx, y + dy)] + self.cuerpo[:-1]
+        nueva_cabeza = (x + dx, y + dy)
+        if crecio:
+            self.cuerpo = [nueva_cabeza] + self.cuerpo
+        else:
+            self.cuerpo = [nueva_cabeza] + self.cuerpo[:-1]
 
     def cambiar_direccion(self, nueva_direccion):
         if nueva_direccion != self.direccion.opuesta:
