@@ -107,3 +107,14 @@ def test_puntaje_incrementa_al_comer():
     juego.tick()
 
     assert juego.puntaje == 1
+
+
+# RF10 — Victoria al llenar el tablero
+def test_victoria_al_llenar_el_tablero():
+    juego = Juego(ancho=2, alto=1, inicio=(0, 0), semilla=0)
+    juego.comida = (1, 0)
+
+    juego.tick()
+
+    assert juego.gano is True
+    assert juego.terminado is True

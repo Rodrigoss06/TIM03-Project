@@ -112,3 +112,6 @@ class Juego:
         if comio:
             self.puntaje += 1
             self.comida = self._generar_comida()
+            if self.comida is None:
+                self.gano = True
+                self.terminado = True
