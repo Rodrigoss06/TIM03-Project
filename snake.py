@@ -98,7 +98,17 @@ class Juego:
         return not (0 <= x < self.ancho and 0 <= y < self.alto)
 
     def tick(self):
-        self.serpiente.mover()
+        dx, dy = self.serpiente.direccion.value
+        x, y = self.serpiente.cabeza
+        siguiente = (x + dx, y + dy)
+        comio = siguiente == self.comida
+
+        self.serpiente.mover(crecio=comio)
 
         if self._fuera_de_limites(self.serpiente.cabeza) or self.serpiente.choco_consigo_misma():
             self.terminado = True
+            return
+
+        if comio:
+            self.puntaje += 1
+            self.comida = self._generar_comida()

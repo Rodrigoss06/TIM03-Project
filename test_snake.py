@@ -97,3 +97,13 @@ def test_serpiente_no_choca_si_no_se_superpone():
     serpiente.cuerpo = [(2, 2), (1, 2), (1, 1)]
 
     assert serpiente.choco_consigo_misma() is False
+
+
+# RF09 — Llevar el puntaje
+def test_puntaje_incrementa_al_comer():
+    juego = Juego(ancho=5, alto=5, inicio=(2, 2), semilla=0)
+    juego.comida = (3, 2)
+
+    juego.tick()
+
+    assert juego.puntaje == 1
