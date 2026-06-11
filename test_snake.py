@@ -82,3 +82,18 @@ def test_game_over_al_chocar_con_la_pared():
     juego.tick()
 
     assert juego.terminado is True
+
+
+# RF08 — Derrota: colisión consigo misma
+def test_serpiente_detecta_choque_consigo_misma():
+    serpiente = Serpiente(inicio=(2, 2), direccion=Direccion.DERECHA)
+    serpiente.cuerpo = [(2, 2), (3, 2), (3, 3), (2, 3), (2, 2)]
+
+    assert serpiente.choco_consigo_misma() is True
+
+
+def test_serpiente_no_choca_si_no_se_superpone():
+    serpiente = Serpiente(inicio=(2, 2), direccion=Direccion.DERECHA)
+    serpiente.cuerpo = [(2, 2), (1, 2), (1, 1)]
+
+    assert serpiente.choco_consigo_misma() is False

@@ -60,6 +60,9 @@ class Serpiente:
         if nueva_direccion != self.direccion.opuesta:
             self.direccion = nueva_direccion
 
+    def choco_consigo_misma(self):
+        return self.cabeza in self.cuerpo[1:]
+
 
 class Juego:
     """Coordina el tablero, la serpiente, la comida y el puntaje."""
@@ -97,5 +100,5 @@ class Juego:
     def tick(self):
         self.serpiente.mover()
 
-        if self._fuera_de_limites(self.serpiente.cabeza):
+        if self._fuera_de_limites(self.serpiente.cabeza) or self.serpiente.choco_consigo_misma():
             self.terminado = True
