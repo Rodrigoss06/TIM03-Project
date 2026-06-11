@@ -17,6 +17,7 @@ TECLAS_DIRECCION = {
 
 
 def dibujar(pantalla, juego):
+    _, columnas = pantalla.getmaxyx()
     pantalla.erase()
     for y in range(juego.alto):
         fila = ""
@@ -29,8 +30,8 @@ def dibujar(pantalla, juego):
                 fila += "*"
             else:
                 fila += "."
-        pantalla.addstr(y, 0, fila)
-    pantalla.addstr(juego.alto, 0, f"Puntaje: {juego.puntaje}")
+        pantalla.addstr(y, 0, fila[: columnas - 1])
+    pantalla.addstr(juego.alto, 0, f"Puntaje: {juego.puntaje}"[: columnas - 1])
     pantalla.refresh()
 
 
@@ -39,7 +40,10 @@ def main(pantalla):
     pantalla.nodelay(True)
     pantalla.timeout(150)
 
-    juego = Juego(ancho=20, alto=15)
+    filas, columnas = pantalla.getmaxyx()
+    ancho = min(20, columnas - 1)
+    alto = min(15, filas - 2)
+    juego = Juego(ancho=ancho, alto=alto)
 
     while not juego.terminado:
         dibujar(pantalla, juego)
@@ -55,7 +59,8 @@ def main(pantalla):
     dibujar(pantalla, juego)
     mensaje = "Ganaste!" if juego.gano else "Game over"
     pantalla.nodelay(False)
-    pantalla.addstr(juego.alto + 1, 0, f"{mensaje} Presiona una tecla para salir.")
+    _, columnas = pantalla.getmaxyx()
+    pantalla.addstr(juego.alto + 1, 0, f"{mensaje} Presiona una tecla para salir."[: columnas - 1])
     pantalla.refresh()
     pantalla.getch()
 
