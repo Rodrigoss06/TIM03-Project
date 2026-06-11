@@ -21,8 +21,14 @@ python -m pytest -v
 python jugar.py
 ```
 
+Controles: flechas para cambiar de dirección, `q` para salir. El tablero se
+dibuja con `@` (cabeza), `o` (cuerpo), `*` (comida) y `.` (celda vacía). Al
+chocar con la pared o consigo misma termina la partida (game over); si la
+serpiente llena todo el tablero, ganas.
+
 ## Estructura
 
-- `snake.py`: lógica pura del juego (sin E/S).
-- `test_snake.py`: pruebas pytest, una por criterio de aceptación.
-- `jugar.py`: interfaz de consola.
+- `snake.py`: lógica pura del juego (sin E/S). Contiene `Direccion`,
+  `Serpiente` y `Juego`.
+- `test_snake.py`: pruebas pytest, una por criterio de aceptación (RF01–RF10).
+- `jugar.py`: interfaz de consola (render + teclado), sin reglas de juego.
