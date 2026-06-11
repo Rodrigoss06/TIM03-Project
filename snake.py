@@ -18,3 +18,7 @@ class Serpiente:
 
 class Juego:
     """Coordina el tablero, la serpiente, la comida y el puntaje."""
+
+    def __init__(self, ancho, alto):
+        self.ancho = ancho
+        self.alto = alto
