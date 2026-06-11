@@ -4,6 +4,7 @@ Solo se encarga de dibujar el tablero, leer el teclado y llamar a
 tick(). No contiene reglas del juego.
 """
 
+import argparse
 import curses
 
 from snake import Direccion, Juego
@@ -15,30 +16,50 @@ TECLAS_DIRECCION = {
     curses.KEY_RIGHT: Direccion.DERECHA,
 }
 
+SIMBOLOS_SIMPLES = {"cabeza": "@", "cuerpo": "o", "comida": "*", "vacio": "."}
+SIMBOLOS_MEJORADOS = {"cabeza": "█", "cuerpo": "▓", "comida": "●", "vacio": "·"}
 
-def dibujar(pantalla, juego):
+
+def _colores_mejorados():
+    if not curses.has_colors():
+        return {}
+    curses.start_color()
+    curses.use_default_colors()
+    curses.init_pair(1, curses.COLOR_GREEN, -1)
+    curses.init_pair(2, curses.COLOR_RED, -1)
+    return {
+        "cabeza": curses.color_pair(1) | curses.A_BOLD,
+        "cuerpo": curses.color_pair(1),
+        "comida": curses.color_pair(2) | curses.A_BOLD,
+    }
+
+
+def dibujar(pantalla, juego, simbolos, colores):
     _, columnas = pantalla.getmaxyx()
     pantalla.erase()
     for y in range(juego.alto):
-        fila = ""
         for x in range(juego.ancho):
-            if (x, y) == juego.serpiente.cabeza:
-                fila += "@"
-            elif (x, y) in juego.serpiente.cuerpo:
-                fila += "o"
-            elif (x, y) == juego.comida:
-                fila += "*"
+            pos = (x, y)
+            if pos == juego.serpiente.cabeza:
+                clave = "cabeza"
+            elif pos in juego.serpiente.cuerpo:
+                clave = "cuerpo"
+            elif pos == juego.comida:
+                clave = "comida"
             else:
-                fila += "."
-        pantalla.addstr(y, 0, fila[: columnas - 1])
+                clave = "vacio"
+            pantalla.addstr(y, x, simbolos[clave], colores.get(clave, 0))
     pantalla.addstr(juego.alto, 0, f"Puntaje: {juego.puntaje}"[: columnas - 1])
     pantalla.refresh()
 
 
-def main(pantalla):
+def main(pantalla, mejorado):
     curses.curs_set(0)
     pantalla.nodelay(True)
     pantalla.timeout(150)
+
+    simbolos = SIMBOLOS_MEJORADOS if mejorado else SIMBOLOS_SIMPLES
+    colores = _colores_mejorados() if mejorado else {}
 
     filas, columnas = pantalla.getmaxyx()
     ancho = min(20, columnas - 1)
@@ -46,7 +67,7 @@ def main(pantalla):
     juego = Juego(ancho=ancho, alto=alto)
 
     while not juego.terminado:
-        dibujar(pantalla, juego)
+        dibujar(pantalla, juego, simbolos, colores)
 
         tecla = pantalla.getch()
         if tecla == ord("q"):
@@ -56,7 +77,7 @@ def main(pantalla):
 
         juego.tick()
 
-    dibujar(pantalla, juego)
+    dibujar(pantalla, juego, simbolos, colores)
     mensaje = "Ganaste!" if juego.gano else "Game over"
     pantalla.nodelay(False)
     _, columnas = pantalla.getmaxyx()
@@ -65,5 +86,17 @@ def main(pantalla):
     pantalla.getch()
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Snake por consola")
+    parser.add_argument(
+        "-m",
+        "--mejorado",
+        action="store_true",
+        help="usa simbolos y colores mejorados para el tablero",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    curses.wrapper(main)
+    args = parse_args()
+    curses.wrapper(main, args.mejorado)

@@ -26,6 +26,16 @@ dibuja con `@` (cabeza), `o` (cuerpo), `*` (comida) y `.` (celda vacía). Al
 chocar con la pared o consigo misma termina la partida (game over); si la
 serpiente llena todo el tablero, ganas.
 
+### Modo mejorado
+
+```bash
+python jugar.py --mejorado
+```
+
+(o `python jugar.py -m`). Usa símbolos y colores: cabeza/cuerpo en verde
+(`█`/`▓`) y comida en rojo (`●`). Si la terminal no soporta colores, se
+muestran solo los símbolos.
+
 ## Estructura
 
 - `snake.py`: lógica pura del juego (sin E/S). Contiene `Direccion`,
