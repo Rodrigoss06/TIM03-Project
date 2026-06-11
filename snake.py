@@ -15,6 +15,17 @@ class Direccion(Enum):
 class Serpiente:
     """Representa a la serpiente: su cuerpo y su movimiento."""
 
+    def __init__(self, inicio):
+        self.cuerpo = [inicio]
+
+    @property
+    def cabeza(self):
+        return self.cuerpo[0]
+
+    @property
+    def longitud(self):
+        return len(self.cuerpo)
+
 
 class Juego:
     """Coordina el tablero, la serpiente, la comida y el puntaje."""
