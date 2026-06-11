@@ -34,3 +34,20 @@ def test_serpiente_se_mueve_hacia_arriba():
     serpiente.mover()
 
     assert serpiente.cabeza == (5, 4)
+
+
+# RF04 — Cambiar dirección (no 180°)
+def test_no_permite_giro_de_180_grados():
+    serpiente = Serpiente(inicio=(5, 5), direccion=Direccion.DERECHA)
+
+    serpiente.cambiar_direccion(Direccion.IZQUIERDA)
+
+    assert serpiente.direccion == Direccion.DERECHA
+
+
+def test_permite_giro_perpendicular_valido():
+    serpiente = Serpiente(inicio=(5, 5), direccion=Direccion.DERECHA)
+
+    serpiente.cambiar_direccion(Direccion.ARRIBA)
+
+    assert serpiente.direccion == Direccion.ARRIBA

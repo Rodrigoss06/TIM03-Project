@@ -20,6 +20,16 @@ class Direccion(Enum):
     IZQUIERDA = (-1, 0)
     DERECHA = (1, 0)
 
+    @property
+    def opuesta(self):
+        opuestas = {
+            Direccion.ARRIBA: Direccion.ABAJO,
+            Direccion.ABAJO: Direccion.ARRIBA,
+            Direccion.IZQUIERDA: Direccion.DERECHA,
+            Direccion.DERECHA: Direccion.IZQUIERDA,
+        }
+        return opuestas[self]
+
 
 class Serpiente:
     """Representa a la serpiente: su cuerpo y su movimiento."""
@@ -40,6 +50,10 @@ class Serpiente:
         dx, dy = self.direccion.value
         x, y = self.cabeza
         self.cuerpo = [(x + dx, y + dy)] + self.cuerpo[:-1]
+
+    def cambiar_direccion(self, nueva_direccion):
+        if nueva_direccion != self.direccion.opuesta:
+            self.direccion = nueva_direccion
 
 
 class Juego:
