@@ -62,3 +62,14 @@ def test_serpiente_crece_al_comer():
     assert serpiente.longitud == 2
     assert serpiente.cabeza == (6, 5)
     assert serpiente.cuerpo == [(6, 5), (5, 5)]
+
+
+# RF06 — Generar comida válida
+def test_comida_dentro_del_tablero_y_fuera_de_la_serpiente():
+    juego = Juego(ancho=10, alto=10, semilla=0)
+
+    x, y = juego.comida
+
+    assert 0 <= x < juego.ancho
+    assert 0 <= y < juego.alto
+    assert juego.comida not in juego.serpiente.cuerpo

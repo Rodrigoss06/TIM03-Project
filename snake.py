@@ -5,6 +5,7 @@ librerías de pantalla). Toda la aleatoriedad debe pasar por
 random.Random(semilla) para que el comportamiento sea determinista.
 """
 
+import random
 from enum import Enum
 
 
@@ -63,6 +64,32 @@ class Serpiente:
 class Juego:
     """Coordina el tablero, la serpiente, la comida y el puntaje."""
 
-    def __init__(self, ancho, alto):
+    def __init__(self, ancho=20, alto=20, inicio=None, semilla=None):
+        if ancho <= 0 or alto <= 0:
+            ancho, alto = 20, 20
         self.ancho = ancho
         self.alto = alto
+
+        if inicio is None:
+            inicio = (ancho // 2, alto // 2)
+        self.serpiente = Serpiente(inicio)
+
+        self._random = random.Random(semilla)
+        self.puntaje = 0
+        self.terminado = False
+        self.gano = False
+        self.comida = self._generar_comida()
+
+    def _celdas_libres(self):
+        todas = {(x, y) for x in range(self.ancho) for y in range(self.alto)}
+        return todas - set(self.serpiente.cuerpo)
+
+    def _generar_comida(self):
+        libres = self._celdas_libres()
+        if not libres:
+            return None
+        return self._random.choice(sorted(libres))
+
+    def _fuera_de_limites(self, pos):
+        x, y = pos
+        return not (0 <= x < self.ancho and 0 <= y < self.alto)
