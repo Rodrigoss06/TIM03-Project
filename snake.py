@@ -98,6 +98,8 @@ class Juego:
         return not (0 <= x < self.ancho and 0 <= y < self.alto)
 
     def tick(self):
+        if self.terminado:
+            return
         dx, dy = self.serpiente.direccion.value
         x, y = self.serpiente.cabeza
         siguiente = (x + dx, y + dy)

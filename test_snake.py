@@ -118,3 +118,32 @@ def test_victoria_al_llenar_el_tablero():
 
     assert juego.gano is True
     assert juego.terminado is True
+
+
+# Pruebas de borde (Semana 3)
+
+def test_tick_no_hace_nada_si_juego_terminado():
+    juego = Juego(ancho=5, alto=5, inicio=(2, 2), semilla=0)
+    juego.terminado = True
+    puntaje_antes = juego.puntaje
+    cabeza_antes = juego.serpiente.cabeza
+
+    juego.tick()
+
+    assert juego.serpiente.cabeza == cabeza_antes
+    assert juego.puntaje == puntaje_antes
+
+
+def test_cambiar_direccion_misma_no_cambia():
+    serpiente = Serpiente(inicio=(5, 5), direccion=Direccion.DERECHA)
+
+    serpiente.cambiar_direccion(Direccion.DERECHA)
+
+    assert serpiente.direccion == Direccion.DERECHA
+
+
+def test_tablero_dimensiones_invalidas_usan_defecto():
+    juego = Juego(ancho=0, alto=-1)
+
+    assert juego.ancho == 20
+    assert juego.alto == 20

@@ -53,37 +53,52 @@ def dibujar(pantalla, juego, simbolos, colores):
     pantalla.refresh()
 
 
+def _esperar_fin(pantalla, juego, simbolos, colores):
+    """Muestra la pantalla final y devuelve True si el jugador quiere reiniciar."""
+    dibujar(pantalla, juego, simbolos, colores)
+    _, columnas = pantalla.getmaxyx()
+    if juego.gano:
+        linea1 = f"¡Ganaste! Puntaje final: {juego.puntaje}"
+    else:
+        linea1 = f"Game over. Puntaje final: {juego.puntaje}"
+    linea2 = "[r] Reiniciar   [q] Salir"
+    pantalla.addstr(juego.alto, 0, linea1[: columnas - 1])
+    pantalla.addstr(juego.alto + 1, 0, linea2[: columnas - 1])
+    pantalla.nodelay(False)
+    pantalla.refresh()
+    while True:
+        tecla = pantalla.getch()
+        if tecla in (ord("q"), ord("Q")):
+            return False
+        if tecla in (ord("r"), ord("R")):
+            return True
+
+
 def main(pantalla, mejorado):
     curses.curs_set(0)
-    pantalla.nodelay(True)
-    pantalla.timeout(150)
-
     simbolos = SIMBOLOS_MEJORADOS if mejorado else SIMBOLOS_SIMPLES
     colores = _colores_mejorados() if mejorado else {}
 
     filas, columnas = pantalla.getmaxyx()
     ancho = min(20, columnas - 1)
     alto = min(15, filas - 2)
-    juego = Juego(ancho=ancho, alto=alto)
 
-    while not juego.terminado:
-        dibujar(pantalla, juego, simbolos, colores)
+    while True:
+        pantalla.nodelay(True)
+        pantalla.timeout(150)
+        juego = Juego(ancho=ancho, alto=alto)
 
-        tecla = pantalla.getch()
-        if tecla == ord("q"):
+        while not juego.terminado:
+            dibujar(pantalla, juego, simbolos, colores)
+            tecla = pantalla.getch()
+            if tecla == ord("q"):
+                return
+            if tecla in TECLAS_DIRECCION:
+                juego.serpiente.cambiar_direccion(TECLAS_DIRECCION[tecla])
+            juego.tick()
+
+        if not _esperar_fin(pantalla, juego, simbolos, colores):
             return
-        if tecla in TECLAS_DIRECCION:
-            juego.serpiente.cambiar_direccion(TECLAS_DIRECCION[tecla])
-
-        juego.tick()
-
-    dibujar(pantalla, juego, simbolos, colores)
-    mensaje = "Ganaste!" if juego.gano else "Game over"
-    pantalla.nodelay(False)
-    _, columnas = pantalla.getmaxyx()
-    pantalla.addstr(juego.alto + 1, 0, f"{mensaje} Presiona una tecla para salir."[: columnas - 1])
-    pantalla.refresh()
-    pantalla.getch()
 
 
 def parse_args():
